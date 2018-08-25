@@ -33,12 +33,14 @@ class app
 				exit;
 			}
 		}
+		
 		$user = $this->user->getUserById($_user['sessionuserid']);
 		$user['manager_apps'] = unserialize($user['manager_apps']);
 		$this->tpl->assign('_user',$user);
 		$this->tpl->assign('action',$this->ev->url(2)?$this->ev->url(2):'user');
 		$localapps = $this->apps->getLocalAppList();
 		$apps = $this->apps->getAppList();
+		//var_dump($localapps);die;
 		$this->tpl->assign('localapps',$localapps);
 		$this->tpl->assign('apps',$apps);
 	}

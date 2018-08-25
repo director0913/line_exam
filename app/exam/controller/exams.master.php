@@ -75,6 +75,32 @@ class action extends app
 		);
 		$this->G->R($message);
 	}
+	private function cancleexam()
+	{
+		$examid = $this->ev->get('examid');
+		$page = $this->ev->get('page');
+		$this->exam->cancleExamSetting($examid);
+		$message = array(
+			'statusCode' => 200,
+			"message" => "操作成功",
+			"callbackType" => "forward",
+		    "forwardUrl" => "index.php?exam-master-exams&page={$page}{$u}"
+		);
+		$this->G->R($message);
+	}
+	private function publicexam()
+	{
+		$examid = $this->ev->get('examid');
+		$page = $this->ev->get('page');
+		$this->exam->publicExamSetting($examid);
+		$message = array(
+			'statusCode' => 200,
+			"message" => "操作成功",
+			"callbackType" => "forward",
+		    "forwardUrl" => "index.php?exam-master-exams&page={$page}{$u}"
+		);
+		$this->G->R($message);
+	}
 
 	private function preview()
 	{
@@ -559,10 +585,14 @@ class action extends app
 		$this->pg->setUrlTarget('modal-body" class="ajax');
 		if(!$search['questionisrows'])
 		{
-			$args = array(array("AND","quest2knows.qkquestionid = questions.questionid"),array("AND","questions.questionstatus = '1'"),array("AND","questions.questionparent = 0"),array("AND","quest2knows.qktype = 0") );
+			$args = array(array("AND","questions.questionstatus = '1'"),array("AND","questions.questionparent = 0") );
 			if($search['keyword'])
 			{
 				$args[] = array("AND","questions.question LIKE :question",'question','%'.$search['keyword'].'%');
+			}
+			if($search['questiontypesid'])
+			{
+				$args[] = array("AND","find_in_set(questions.questiontypesid,:questiontypesid)",'questiontypesid',$search['questiontypesid']);
 			}
 			if($search['knowsids'])
 			{
@@ -584,42 +614,6 @@ class action extends app
 			{
 				$args[] = array("AND","questions.questionlevel = :questionlevel",'questionlevel',$search['questionlevel']);
 			}
-			if($search['questionknowsid'])
-			{
-				$args[] = array("AND","quest2knows.qkknowsid = :qkknowsid",'qkknowsid',$search['questionknowsid']);
-			}
-			else
-			{
-				$tmpknows = '0';
-				if($search['questionsectionid'])
-				{
-					$knows = $this->section->getKnowsListByArgs(array(array("AND","knowsstatus = 1"),array("AND","knowssectionid = :knowssectionid",'knowssectionid',$search['questionsectionid'])));
-					foreach($knows as $p)
-					{
-						if($p['knowsid'])$tmpknows .= ','.$p['knowsid'];
-					}
-					$args[] = array("AND","find_in_set(quest2knows.qkknowsid,:qkknowsid)",'qkknowsid' ,$tmpknows);
-				}
-				elseif($search['questionsubjectid'])
-				{
-					$knows = $this->section->getAllKnowsBySubject($search['questionsubjectid']);
-					foreach($knows as $p)
-					{
-						if($p['knowsid'])$tmpknows .= ','.$p['knowsid'];
-					}
-					$args[] = array("AND","find_in_set(quest2knows.qkknowsid,:qkknowsid)",'qkknowsid',$tmpknows);
-				}
-				else
-				{
-					$knows = $this->section->getAllKnowsBySubjects($this->teachsubjects);
-					foreach($knows as $p)
-					{
-						if($p['knowsid'])$tmpknows .= ','.$p['knowsid'];
-					}
-					$args[] = array("AND","find_in_set(quest2knows.qkknowsid,:qkknowsid)",'qkknowsid',$tmpknows);
-				}
-			}
-
 			$questions = $this->exam->getQuestionsList($page,10,$args);
 		}
 		else
@@ -686,7 +680,9 @@ class action extends app
 		$questypes = $this->basic->getQuestypeList();
 		$sections = $this->section->getSectionListByArgs(array(array("AND","sectionsubjectid = :sectionsubjectid",'sectionsubjectid',$search['questionsubjectid'])));
 		$knows = $this->section->getKnowsListByArgs(array(array("AND","knowsstatus = 1"),array("AND","knowssectionid = :knowssectionid",'knowssectionid',$search['questionsectionid'])));
-		//$this->tpl->assign('subjects',$subjects);
+
+		$types = $this->basic->getTypeList();
+		$this->tpl->assign('types',$types);
 		$this->tpl->assign('search',$search);
 		$this->tpl->assign('sections',$sections);
 		$this->tpl->assign('knows',$knows);

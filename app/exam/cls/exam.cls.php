@@ -231,6 +231,30 @@ class exam_exam
 		return $this->db->exec($sql);
 		//$this->db->affectedRows();
 	}
+	//发布试卷
+	//参数：考试ID
+	//返回值：受影响记录数
+	public function publicExamSetting($id)
+	{
+		$data = array('exams',array('examispublic'=>1),array(array("AND","examid = :examid",'examid',$id)));
+		$sql = $this->pdosql->makeUpdate($data);
+		//$data = array('exams',array("examstatus"=>0),"examid = '{$id}'");
+		//$sql = $this->pdosql->makeUpdate($data);
+		return $this->db->exec($sql);
+		//$this->db->affectedRows();
+	}
+	//取消发布试卷
+	//参数：考试ID
+	//返回值：受影响记录数
+	public function cancleExamSetting($id)
+	{
+		$data = array('exams',array('examispublic'=>0),array(array("AND","examid = :examid",'examid',$id)));
+		$sql = $this->pdosql->makeUpdate($data);
+		//$data = array('exams',array("examstatus"=>0),"examid = '{$id}'");
+		//$sql = $this->pdosql->makeUpdate($data);
+		return $this->db->exec($sql);
+		//$this->db->affectedRows();
+	}
 
 	//增加考试设置
 	//参数：考试设置参数（数组）
@@ -828,10 +852,10 @@ class exam_exam
 	{
 		$page = $page > 0?$page:1;
 		$r = array();
-		$data = array('DISTINCT questions.*',array('questions','quest2knows'),$args,false,'questions.questionid DESC',array(intval($page-1)*$number,$number));
+		$data = array('DISTINCT questions.*',array('questions'),$args,false,'questions.questionid DESC',array(intval($page-1)*$number,$number));
 		$sql = $this->pdosql->makeSelect($data);
 		$r['data'] = $this->db->fetchAll($sql,false,array('questionhtml','questionknowsid'));
-		$data = array('count(DISTINCT questions.questionid) AS number',array('questions','quest2knows'),$args);
+		$data = array('count(DISTINCT questions.questionid) AS number',array('questions'),$args);
 		$sql = $this->pdosql->makeSelect($data);
 		$t = $this->db->fetch($sql);
 		$pages = $this->pg->outPage($this->pg->getPagesNumber($t['number'],$number),$page);

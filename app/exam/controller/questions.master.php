@@ -64,6 +64,7 @@ class action extends app
 		if($this->ev->get('insertquestion'))
 		{
 			$type = $this->ev->get('type');
+			$typesid = $this->ev->get('typesid');
 			$questionparent = $this->ev->get('questionparent');
 			//批量添加
 			if($type)
@@ -86,6 +87,7 @@ class action extends app
 				if(is_array($args['questionanswer']))$args['questionanswer'] = implode('',$args['questionanswer']);
 				$page = $this->ev->get('page');
 				$args['questioncreatetime'] = TIME;
+				$args['questiontypesid'] = $typesid;
 				$args['questionusername'] = $this->_user['sessionusername'];
 				$this->exam->addQuestions($args);
 			}
@@ -112,10 +114,10 @@ class action extends app
 		{
 			$search = $this->ev->get('search');
 			$questypes = $this->basic->getQuestypeList();
-			$subjects = $this->basic->getSubjectList();
+			$types = $this->basic->getTypeList();
 			$sections = $this->section->getSectionListByArgs(array(array("AND","sectionsubjectid = :sectionsubjectid",'sectionsubjectid',$search['questionsubjectid'])));
 			$knows = $this->section->getKnowsListByArgs(array(array("AND","knowsstatus = 1"),array("AND","knowssectionid = :knowssectionid",'knowssectionid',$search['questionsectionid'])));
-			$this->tpl->assign('subjects',$subjects);
+			$this->tpl->assign('types',$types);
 			$this->tpl->assign('sections',$sections);
 			$this->tpl->assign('knows',$knows);
 			$this->tpl->assign('questypes',$questypes);
@@ -191,12 +193,14 @@ class action extends app
 
 	private function modifyquestion()
 	{
+	//	var_dump($this->ev->get('modifyquestion'));die;
 		if($this->ev->get('modifyquestion'))
 		{
 			$page = $this->ev->get('page');
 			$args = $this->ev->get('args');
 			$questionid = $this->ev->get('questionid');
 			$targs = $this->ev->get('targs');
+			//var_dump($targs);die;
 			$questype = $this->basic->getQuestypeById($args['questiontype']);
 			if($questype['questsort'])$choice = 0;
 			else $choice = $questype['questchoice'];
@@ -238,6 +242,9 @@ class action extends app
 				$knows = $this->section->getKnowsByArgs(array(array("AND","knowsid = :knowsid",'knowsid',$p['knowsid'])));
 				$question['questionknowsid'][$key]['knows'] = $knows['knows'];
 			}
+			// var_dump($question);die;
+			$types = $this->basic->getTypeList();
+			$this->tpl->assign('types',$types);
 			$this->tpl->assign('subjects',$subjects);
 			$this->tpl->assign('questionparent',$questionparent);
 			$this->tpl->assign('questypes',$questypes);

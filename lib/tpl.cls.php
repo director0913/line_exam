@@ -421,7 +421,7 @@ else
             $this->fl = $this->G->make('files');
             $this->ev = $this->G->make('ev');
 
-            $this->dir = $this->G->app.'/tpls/'.$this->G->module.'/';
+            $this->dir = 'tpls/';
         }
 
         //设置缓存事件

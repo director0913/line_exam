@@ -9,5 +9,6 @@ require "lib/init.cls.php";
 
 $ginkgo = new ginkgo;
 $ginkgo->run();
-//echo $t2[0]- $t1[0];
+//定义菜单数组
+
 ?>

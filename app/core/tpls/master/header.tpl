@@ -8,7 +8,7 @@
     <meta name="keywords" content="在线考试系统,网络考试系统,企业考试系统,在线考试平台,手机考试,移动考试" />
     <meta name="description" content="考试星是一款免费,好用在线考试系统,可以用手机考试,支持多种客户端" />
     <meta name="author" content="" />
-    <title>考试云平台</title>
+    <title>考试系统</title>
     <link rel="shortcut icon" href="https://admin.kaoshixing.com/static/base/images/new_logo.ico" />
     <link rel="stylesheet" type="text/css" href="https://admin.kaoshixing.com/static/plugins/bootstrap/css/bootstrap.min.css?v=246e02790957">
     <link rel="stylesheet" type="text/css" href="https://admin.kaoshixing.com/static/base/css/admin_base.css?v=3efd2a9e0c57">

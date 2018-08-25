@@ -118,6 +118,15 @@ class basic_exam
 		$sql = $this->pdosql->makeSelect($data);
 		return $this->db->fetchAll($sql,'subjectid','subjectsetting');
 	}
+	//获取分类列表
+	//参数：无
+	//返回值：科目列表数组
+	public function getTypeList($args = 1)
+	{
+		$data = array(false,'types',$args);
+		$sql = $this->pdosql->makeSelect($data);
+		return $this->db->fetchAll($sql,'id');
+	}
 
 	//根据科目查询
 	//参数：科目名称字符串
