@@ -134,6 +134,10 @@ class ginkgo
 			exit("<script>alert('{$message['message']}');window.location = document.referrer+'&'+Math.random();</script>");
 		}
 	}
+	public function JSON($data)
+	{
+		echo json_encode($data);die;
+	}
 }
 
 ?>

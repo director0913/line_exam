@@ -7,6 +7,7 @@
 		<div class="main">
 			<div class="col-xs-10" id="datacontent">
 {x2;endif}
+
 				<div class="box itembox" style="margin-bottom:0px;border-bottom:1px solid #CCCCCC;">
 					<div class="col-xs-12">
 						<ol class="breadcrumb">
@@ -21,7 +22,7 @@
 						随机组卷
 						<a class="btn btn-primary pull-right" href="index.php?{x2;$_app}-master-exams&page={x2;$page}{x2;$u}">试卷管理</a>
 					</h4>
-			        <form action="index.php?exam-master-exams-autopage" method="post" class="form-horizontal">
+			        <form id="showDataForm" action="index.php?exam-master-exams-autopage" method="post" class="form-horizontal" onsubmit="return false">
 						<div class="form-group">
 							<label class="control-label col-sm-2" for="content">试卷名称：</label>
 					  		<div class="col-sm-4">
@@ -110,7 +111,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-2"></label>
 							<div class="col-sm-9">
-								<button class="btn btn-primary" type="submit">提交</button>
+								<input class="btn btn-primary" type="submit">
 								<input type="hidden" name="submitsetting" value="1"/>
 							</div>
 						</div>
@@ -218,6 +219,7 @@
 		</div>
 	</div>
 </div>
+<script src="/app/statics/js/jquery.form.js"></script>
 <script>
 function loadsubjectsetting(obj)
 {
@@ -241,7 +243,31 @@ function confirmRules()
 	$('#'+currentP).val($('#'+currentP).val()+knows+':'+allnumber+':'+pnumber+'\n');
 	$('#modal').modal('hide');
 }
+$(document).ready(function() {
+ var options = {
+  target: '#output1',
+   dataType:'json',
+  // 从服务传过来的数据显示在这个div内部,也就是ajax局部刷新
+ // ajax提交之前的处理
+  success:  showResponse
+ // 处理之后的处理
+ };
+ $('#showDataForm').submit(function() {
+  $(this).ajaxSubmit(options);
+  return false; 
+  //非常重要，如果是false，则表明是不跳转
+  //在本页上处理，也就是ajax，如果是非false，则传统的form跳转。
+ });
+});
+function showResponse(responseText, statusText, xhr, $form) {
+ alert(xhr.responseText);
+//xhr：说明你可以用ajax来自己再次发出请求
+//$form：是那个form对象，是一个jquery对象
+//statusText：状态，成功则为success
+//responseText，服务器返回的是字符串（当然包括html，不包括json）
+}
 </script>
+
 {x2;include:footer}
 </body>
 </html>

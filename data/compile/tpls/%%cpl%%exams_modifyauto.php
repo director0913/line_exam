@@ -41,7 +41,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2">考试科目：</label>
+							<label class="control-label col-sm-2">试卷分类：</label>
 						  	<div class="col-sm-9">
 							  	<label class="radio"><?php echo $this->tpl_var['subjects'][$this->tpl_var['exam']['examsubject']]['subject']; ?></label>
 							</div>

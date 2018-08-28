@@ -7,6 +7,8 @@
 		<div class="main">
 			<div class="col-xs-10" id="datacontent">
 {x2;endif}
+<script src="/app/statics/js/layer-v3.1.1/layer.js"></script>
+<script src="/app/statics/js/clipboard.min.js"></script>
 				<div class="box itembox" style="margin-bottom:0px;border-bottom:1px solid #CCCCCC;">
 					<div class="col-xs-12">
 						<ol class="breadcrumb">
@@ -122,6 +124,7 @@
 										{x2;else}
 										<a class="btn" href="index.php?{x2;$_app}-master-exams-publicexam&page={x2;$page}&examid={x2;v:exam['examid']}{x2;$u}" title="发布考试"><em>发布考试</em></a>
 										{x2;endif}
+										<a class="linkurl" examid="{x2;v:exam['examid']}" href="javascript:;" title="考试链接"><em>考试链接</em></a>
 			                    	</div>
 								</td>
 					        </tr>
@@ -133,6 +136,31 @@
 			        </ul>
 				</div>
 			</div>
+<script type="text/javascript">
+$('.linkurl').click(function(){
+	var img = '<img src="index.php?exam-master-exams-qrcode&examid='+$(this).attr("examid")+'">';
+	var examid = $(this).attr("examid");
+	layer.open({
+	  title: '考试链接',
+	  btn: ['确定', '考一下'],
+	  btn2: function(index, layero){
+	    window.open('//'+window.location.host+'/index.php?exam-app-exampaper-selectquestions&examid='+examid);  
+	  },
+	  content: img+'考试地址：<span  id="login-link">http://'+window.location.host+'/index.php?exam-app-exampaper-selectquestions&examid='+examid+'</span><span class="btn-copy"   data-clipboard-target="#login-link">复制地址</span>'
+	});  
+	
+})
+var clipboard = new Clipboard(".btn-copy");
+clipboard.on('success', function(e) {
+    alert("复制成功!");
+});
+
+clipboard.on('error', function(e) {
+    alert("复制失败，请重试");
+});
+
+
+</script>
 {x2;if:!$userhash}
 		</div>
 	</div>

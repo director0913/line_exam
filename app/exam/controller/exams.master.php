@@ -8,7 +8,8 @@
 class action extends app
 {
 	public function display()
-	{
+	{	
+		require_once("lib/include/phpqrcode.php");
 		$action = $this->ev->url(3);
 		if(!method_exists($this,$action))
 		$action = "index";
@@ -374,7 +375,7 @@ class action extends app
 	}
 
 	private function autopage()
-	{
+	{ 
 		if($this->ev->get('submitsetting'))
 		{
 			$args = $this->ev->get('args');
@@ -406,7 +407,8 @@ class action extends app
 				"message" => "操作成功",
 			    "forwardUrl" => "index.php?exam-master-exams&page={$page}{$u}"
 			);
-			$this->G->R($message);
+			
+			$this->G->JSON($message);
 		}
 		else
 		{
@@ -854,7 +856,14 @@ class action extends app
 		$this->tpl->assign('exams',$exams);
 		$this->tpl->display('exams');
 	}
+
+	private function qrcode()
+	{
+		$examid = $this->ev->get('examid');
+		$url = 'http://'.$_SERVER['HTTP_HOST'].'index.php?exam-app-exampaper-selectquestions&examid='.$examid;
+		header("Content-type: image/png");
+		require_once("lib/include/phpqrcode.php");
+		QRcode::png($url);
+	}
 }
-
-
 ?>
