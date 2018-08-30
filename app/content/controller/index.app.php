@@ -46,10 +46,15 @@ class action extends app
 		$courses = $this->course->getCourseList(1,1,8);
 		$basic = $this->G->make('basic','exam');
 		$basics = $basic->getBestBasics();
+	//	var_dump($this->_user['sessionuserid']);die;
+		$args = array(array('AND',"examauthorid = :examauthorid",'examauthorid',$this->_user['sessionuserid']));
+		$exams = $this->exam->getExamSettingList($page,10,$args);
+		//var_dump($exams);die;
 		$this->tpl->assign('coursecats',$coursecats);
 		$this->tpl->assign('courses',$courses);
 		$this->tpl->assign('basics',$basics);
 		$this->tpl->assign('contents',$contents);
+		$this->tpl->assign('exams',$exams);
 		$this->tpl->display('index');
 	}
 }

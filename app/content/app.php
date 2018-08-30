@@ -21,6 +21,7 @@ class app
 		$this->category = $this->G->make('category');
 		$this->course = $this->G->make('course','course');
 		$this->content = $this->G->make('content','content');
+		$this->exam = $this->G->make('exam','exam');
 		$this->user = $this->G->make('user','user');
 		$this->_user = $_user = $this->session->getSessionUser();
 		$this->tpl->assign('_user',$this->user->getUserById($this->_user['sessionuserid']));
