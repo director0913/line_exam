@@ -49,7 +49,11 @@ class action extends app
 	//	var_dump($this->_user['sessionuserid']);die;
 		$args = array(array('AND',"examauthorid = :examauthorid",'examauthorid',$this->_user['sessionuserid']));
 		$exams = $this->exam->getExamSettingList($page,10,$args);
-		//var_dump($exams);die;
+		//getExamHistoryCount
+		foreach ($exams['data'] as $k => $v) {
+			$count = $this->exam->getExamHistoryCount($v['examid']);
+			$exams['data'][$k]['count'] = $count['count(ehexamid)']?$count['count(ehexamid)']:0;
+		}
 		$this->tpl->assign('coursecats',$coursecats);
 		$this->tpl->assign('courses',$courses);
 		$this->tpl->assign('basics',$basics);

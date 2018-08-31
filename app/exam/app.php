@@ -18,21 +18,21 @@ class app
 		$this->html = $this->G->make('html');
 		$this->session = $this->G->make('session');
 		$this->_user = $this->session->getSessionUser();
-		if(!$this->_user['sessionuserid'])
-		{
-			if($this->ev->get('userhash'))
-			exit(json_encode(array(
-				'statusCode' => 301,
-				"message" => "请您重新登录",
-			    "callbackType" => 'forward',
-			    "forwardUrl" => "index.php?user-app-login"
-			)));
-			else
-			{
-				header("location:index.php?user-app-login");
-				exit;
-			}
-		}
+		// if(!$this->_user['sessionuserid'])
+		// {
+		// 	if($this->ev->get('userhash'))
+		// 	exit(json_encode(array(
+		// 		'statusCode' => 301,
+		// 		"message" => "请您重新登录",
+		// 	    "callbackType" => 'forward',
+		// 	    "forwardUrl" => "index.php?user-app-login"
+		// 	)));
+		// 	else
+		// 	{
+		// 		header("location:index.php?user-app-login");
+		// 		exit;
+		// 	}
+		// }
 		$this->user = $this->G->make('user','user');
 		$this->exam = $this->G->make('exam','exam');
 		$this->basic = $this->G->make('basic','exam');

@@ -105,6 +105,7 @@ class action extends app
 			{
 				$sumscore = $sumscore + floatval($p);
 			}
+
 			$sessionvars['examsessionscore'] = $sumscore;
 			$args['examsessionscorelist'] = $sessionvars['examsessionscorelist'];
 			$allnumber = floatval(count($sessionvars['examsessionscorelist']));
@@ -117,7 +118,7 @@ class action extends app
 			}
 			if($this->ev->get('direct'))
 			{
-				header("location:index.php?exam-app-exampaper-makescore&ehid={$id}");
+				header("location:index.php?exam-app-history-view&ehid={$id}");
 				exit;
 			}
 			else
@@ -126,7 +127,7 @@ class action extends app
 					'statusCode' => 200,
 					"message" => "操作成功",
 				    "callbackType" => 'forward',
-				    "forwardUrl" => "index.php?exam-app-exampaper-makescore&ehid={$id}"
+				    "forwardUrl" => "index.php?exam-app-history-view&ehid={$id}"
 				);
 				$this->G->R($message);
 			}
@@ -326,7 +327,7 @@ class action extends app
 				$this->exam->modifyExamSession($args);
 				$message = array(
 					'statusCode' => 200,
-					"message" => "操作成功",
+					"message" => "操作成1功",
 				    "callbackType" => 'forward',
 				    "forwardUrl" => "index.php?exam-app-exampaper-makescore&makescore=1&direct=1"
 				);
@@ -374,7 +375,48 @@ class action extends app
 			}
 		}
 	}
-
+	private function collect(){
+		if($this->ev->post('submit')){
+			$info['uname'] = $this->ev->post('uname');
+			$info['idcard'] = $this->ev->post('idcard');
+			$info['date'] = $this->ev->post('date');
+			$forward = $this->ev->post('forward');
+			if(!$info['uname'] || !$info['idcard'] || !$info['date'])
+			{	
+				$message = array(
+					'statusCode' => 200,
+					"message" => "信息填写不全，请重新填写！",
+				    "callbackType" => 'forward',
+				    "forwardUrl" => "index.php?exam-app-exampaper-collect"
+				);
+				$this->G->R($message);
+				exit();	
+			}
+			if (!$this->isCreditNo($info['idcard'])) {
+				$message = array(
+					'statusCode' => 200,
+					"message" => "身份证信息填写错误，请重新填写！",
+				    "callbackType" => 'forward',
+				    "forwardUrl" => "index.php?exam-app-exampaper-collect"
+				);
+				$this->G->R($message);
+				exit();
+			}
+			$args['examsessionuserinfo'] = serialize($info);
+			$res = $this->exam->modifyExamSession($args);
+			$message = array(
+				'statusCode' => 200,
+				"message" => "填写成功，即将开始考试！",
+			    "callbackType" => 'forward',
+			    "forwardUrl" => "index.php?exam-app-exampaper-paper"
+			);
+			$this->G->R($message);
+			exit();
+		}else{
+			$this->tpl->display('collect');	
+		}
+		
+	}
 	private function paper()
 	{
 		$sessionvars = $this->exam->getExamSessionBySessionid();
@@ -391,7 +433,11 @@ class action extends app
 			exit;
 		}
 		else
-		{
+		{	
+			if (!$sessionvars['examsessionuserinfo']) {
+				header("location:index.php?exam-app-exampaper-collect");
+			 	exit;
+			}
 			//$exams = $this->exam->getExamSettingList(1,3,array(array("AND","examsubject = :examsubject",'examsubject',$this->data['currentsubject']['subjectid']),array("AND","examtype = 1")));
 			$this->tpl->assign('questype',$questype);
 			$this->tpl->assign('sessionvars',$sessionvars);
@@ -574,6 +620,34 @@ class action extends app
 		$this->tpl->assign('exams',$exams);
 		$this->tpl->display('exampaper');
 	}
+	private function isCreditNo($vStr){
+		  $vCity = array(
+		    '11','12','13','14','15','21','22',
+		    '23','31','32','33','34','35','36',
+		    '37','41','42','43','44','45','46',
+		    '50','51','52','53','54','61','62',
+		    '63','64','65','71','81','82','91'
+		  );
+		  if (!preg_match('/^([\d]{17}[xX\d]|[\d]{15})$/', $vStr)) return false;
+		  if (!in_array(substr($vStr, 0, 2), $vCity)) return false;
+		  $vStr = preg_replace('/[xX]$/i', 'a', $vStr);
+		  $vLength = strlen($vStr);
+		  if ($vLength == 18) {
+		    $vBirthday = substr($vStr, 6, 4) . '-' . substr($vStr, 10, 2) . '-' . substr($vStr, 12, 2);
+		  } else {
+		    $vBirthday = '19' . substr($vStr, 6, 2) . '-' . substr($vStr, 8, 2) . '-' . substr($vStr, 10, 2);
+		  }
+		  if (date('Y-m-d', strtotime($vBirthday)) != $vBirthday) return false;
+		  if ($vLength == 18) {
+		    $vSum = 0;
+		    for ($i = 17 ; $i >= 0 ; $i--) {
+		      $vSubStr = substr($vStr, 17 - $i, 1);
+		      $vSum += (pow(2, $i) % 11) * (($vSubStr == 'a') ? 10 : intval($vSubStr , 11));
+		    }
+		    if($vSum % 11 != 1) return false;
+		  }
+		  return true;
+		}
 }
 
 

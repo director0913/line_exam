@@ -302,7 +302,8 @@ class favor_exam
 					'ehusername'=>$user['username'],
 					'ehdecide' => intval($exam['examsessionsetting']['examdecide']),
 					'ehstatus' => $status,
-					'ehispass' => $exam['examsessionscore'] >= $exam['examsessionsetting']['examsetting']['passscore']?1:0
+					'ehispass' => $exam['examsessionscore'] >= $exam['examsessionsetting']['examsetting']['passscore']?1:0,
+					'ehinfo' => $exam['examsessionuserinfo'],
 		);
 		/**
 		try
@@ -326,6 +327,19 @@ class favor_exam
 			return false;
 		}
 		**/
+		//遍历下，所有答题做下记录
+		$anser_list = $exam['examsessionscorelist'];
+		if ($anser_list && is_array($anser_list)) {
+			$createtime = time();
+			foreach ($anser_list as $k => $v) {
+				$answer['questionid'] = $k;
+				$answer['is_true'] = $v;
+				$answer['createtime'] = $createtime;
+				$data = array('questionsanswer',$answer);
+				$sql = $this->pdosql->makeInsert($data);
+				$aff = $this->db->exec($sql);
+			}
+		}
 		$data = array('examhistory',$args);
 		$sql = $this->pdosql->makeInsert($data);
 		$aff = $this->db->exec($sql);

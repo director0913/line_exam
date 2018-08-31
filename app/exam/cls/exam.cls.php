@@ -138,6 +138,16 @@ class exam_exam
 		$r['number'] = $t['number'];
 		return $r;
 	}
+	//获取考卷答题数量
+	//参数：当前页码，每页显示数，查询条件数组
+	//返回值：考试设置信息列表数组
+	public function getExamHistoryCount($examid)
+	{
+		$args[] = array("AND","ehexamid = :ehexamid",'ehexamid',$examid);
+		$data = array("count(ehexamid)","examhistory",$args,array("ehexamid"),false,false);
+		$sql = $this->pdosql->makeSelect($data);
+		return $this->db->fetch($sql,array('examsetting','examquestions'));
+	}
 
 	public function getExamSettingsByArgs($args)
 	{
