@@ -1,6 +1,8 @@
 {x2;if:!$userhash}
 {x2;include:header}
 <body>
+<div class="viewFrameWork">
+<div class="viewFrameWork-main">
 {x2;include:nav}
 <div class="viewFrameWork-body">
 <div class="body-wrapper">
@@ -89,6 +91,8 @@
     </div>
    </div> 
   </div>
+</div>
+</div>
 </div>
 </div>
 </div>

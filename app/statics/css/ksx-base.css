@@ -826,4 +826,11 @@ i.icon.icon-ksx-支付.icon-pay {line-height: 1.8;  font-size: 16px;}
     font-size: 14px;
     line-height: 34px;
 }
+
+/*styleL start*/
+.table thead tr,.table tbody tr,.table tbody tr td>a,.table tbody tr td>div>a{
+    font-size: 14px;
+}
+/*styleL end*/
+
 A

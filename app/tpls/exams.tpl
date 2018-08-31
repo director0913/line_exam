@@ -1,6 +1,8 @@
 {x2;if:!$userhash}
 {x2;include:header}
 <body>
+<div class="viewFrameWork">
+<div class="viewFrameWork-main">
 {x2;include:nav}
 <div class="container-fluid">
 	<div class="row-fluid">
@@ -42,7 +44,7 @@
 				                </tr>
 				            </thead>
 							<tr>
-								<td>
+								<td style="vertical-align: middle;">
 									选择类型：
 								</td>
 								<td>
@@ -53,7 +55,7 @@
 										<option value="2"{x2;if:$search['examtype'] == 3} selected{x2;endif}>即时组卷</option>
 									</select>
 								</td>
-								<td>
+								<td style="vertical-align: middle;">
 									选择科目：
 								</td>
 								<td>
@@ -138,15 +140,16 @@
 			</div>
 <script type="text/javascript">
 $('.linkurl').click(function(){
-	var img = '<img src="index.php?exam-master-exams-qrcode&examid='+$(this).attr("examid")+'">';
+	var img = '<img src="index.php?exam-master-exams-qrcode&examid='+$(this).attr("examid")+'" style="margin: 0 auto;display: block;">';
 	var examid = $(this).attr("examid");
 	layer.open({
 	  title: '考试链接',
+	  area: ['400px', '310px'],
 	  btn: ['确定', '考一下'],
 	  btn2: function(index, layero){
 	    window.open('//'+window.location.host+'/index.php?exam-app-exampaper-selectquestions&examid='+examid);  
 	  },
-	  content: img+'考试地址：<span  id="login-link">http://'+window.location.host+'/index.php?exam-app-exampaper-selectquestions&examid='+examid+'</span><span class="btn-copy"   data-clipboard-target="#login-link">复制地址</span>'
+	  content: img+'<div><span>考试地址：</span><span  id="login-link">http://'+window.location.host+'/index.php?exam-app-exampaper-selectquestions&examid='+examid+'</span><span class="btn-copy"   data-clipboard-target="#login-link" style="display: inline-block;color: #fff;background-color: #ff7e3b; border-color: #ff6d21; padding: 2px 5px; margin-left: 5px;">复制地址</span></div>'
 	});  
 	
 })
@@ -164,6 +167,8 @@ clipboard.on('error', function(e) {
 {x2;if:!$userhash}
 		</div>
 	</div>
+</div>
+</div>
 </div>
 {x2;include:footer}
 </body>
